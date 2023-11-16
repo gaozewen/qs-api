@@ -1,11 +1,12 @@
 const { Service } = require('egg');
+const crypto = require('crypto');
 
 class UserService extends Service {
   // 通过 username 获取用户信息
   async getUserByUsername(username) {
     const { ctx } = this;
     const { timezone } = ctx;
-    console.log('gzw===>timezone', timezone);
+
     try {
       const result = await ctx.model.User.aggregate([
         { $match: { username: { $eq: username } } },
@@ -13,7 +14,6 @@ class UserService extends Service {
           $project: {
             _id: { $toString: '$_id' },
             username: 1,
-            password: 1,
             nickname: 1,
             createdAt: {
               $dateToString: {
@@ -32,7 +32,7 @@ class UserService extends Service {
           },
         },
       ]);
-      console.log('gzw===>result1', result);
+
       return result[0];
     } catch (error) {
       console.error(error);
@@ -45,7 +45,6 @@ class UserService extends Service {
     const { ctx } = this;
     try {
       const result = await ctx.model.User.findOne({ nickname });
-      console.log('gzw===>result2', result);
       return result;
     } catch (error) {
       console.error(error);
@@ -57,14 +56,22 @@ class UserService extends Service {
   async register(body) {
     const { ctx } = this;
     const { username, password, nickname } = body;
-    console.log('gzw===>body', body);
+
+    // HMAC 加密算法
+    const hmac = (key, str) => {
+      const hmac = crypto.createHmac('sha256', key);
+      hmac.update(str);
+      return hmac.digest('hex');
+    };
+
     try {
       const result = await ctx.model.User.create({
         username,
-        password,
+        // 给密码加密
+        password: hmac('gzw-qs-api', password),
         nickname,
       });
-      console.log('gzw===>result', result);
+
       return result;
     } catch (error) {
       console.error(error);
