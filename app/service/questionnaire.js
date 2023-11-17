@@ -109,5 +109,17 @@ class QuestionnaireService extends Service {
       return { list: [], total: 0 };
     }
   }
+
+  // 获取单个问卷信息
+  async getQuestionnaireById(id) {
+    const { ctx } = this;
+    try {
+      const result = await ctx.model.Questionnaire.findById(id);
+      return result;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
 }
 module.exports = QuestionnaireService;

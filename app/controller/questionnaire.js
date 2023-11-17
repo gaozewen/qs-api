@@ -1,7 +1,7 @@
 'use strict';
 
 const { Controller } = require('egg');
-const { ERROR_SUCCESS, ERROR_FORM } = require('../constant/errno');
+const { ERROR_SUCCESS, ERROR_FORM, ERROR_DB } = require('../constant/errno');
 
 class QuestionnaireController extends Controller {
   // 新建问卷
@@ -45,6 +45,26 @@ class QuestionnaireController extends Controller {
         list,
         total, // 总条数
       },
+    };
+  }
+
+  // 获取单个问卷信息
+  async item() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+
+    const result = await ctx.service.questionnaire.getQuestionnaireById(id);
+    if (!result) {
+      ctx.body = {
+        errno: ERROR_DB,
+        msg: '获取问卷数据失败',
+        data: {},
+      };
+      return;
+    }
+    ctx.body = {
+      errno: ERROR_SUCCESS,
+      data: result,
     };
   }
 }
