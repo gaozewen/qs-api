@@ -24,7 +24,7 @@ module.exports = secret => {
     ctx.status = 200;
     ctx.body = {
       errno: ERROR_JWT_UNSET,
-      msg: '未设置 Token',
+      msg: 'Token 未设置',
     };
     return;
   };

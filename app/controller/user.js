@@ -102,6 +102,8 @@ class UserController extends Controller {
       msg: '登录成功',
       data: {
         token,
+        username: userInfo.username,
+        nickname: userInfo.nickname,
       },
     };
   }
