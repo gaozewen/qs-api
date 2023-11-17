@@ -45,48 +45,68 @@ class QuestionnaireService extends Service {
     const $and = [{ title: { $regex: keyword || '' } }];
     if (isStar) $and.push({ isStar: { $eq: Boolean(isStar) } });
     if (isDeleted) $and.push({ isDeleted: { $eq: Boolean(isDeleted) } });
+    const $match = { $and };
 
     try {
       const result = await ctx.model.Questionnaire.aggregate([
         {
-          $match: {
-            $and,
-          },
-        },
-        {
-          $project: {
-            _id: { $toString: '$_id' },
-            userId: 1,
-            answerCount: 1,
-            title: 1,
-            desc: 1,
-            js: 1,
-            css: 1,
-            isPublished: 1,
-            isStar: 1,
-            isDeleted: 1,
-            createdAt: {
-              $dateToString: {
-                format: '%Y-%m-%d %H:%M:%S',
-                date: '$createdAt',
-                timezone,
+          $facet: {
+            total: [
+              {
+                $match,
               },
-            },
-            updatedAt: {
-              $dateToString: {
-                format: '%Y-%m-%d %H:%M:%S',
-                date: '$updatedAt',
-                timezone,
+              { $count: 'total' },
+            ],
+            list: [
+              {
+                $match,
               },
-            },
+              {
+                $project: {
+                  _id: { $toString: '$_id' },
+                  userId: 1,
+                  answerCount: 1,
+                  title: 1,
+                  desc: 1,
+                  js: 1,
+                  css: 1,
+                  isPublished: 1,
+                  isStar: 1,
+                  isDeleted: 1,
+                  createdAt: {
+                    $dateToString: {
+                      format: '%Y-%m-%d %H:%M:%S',
+                      date: '$createdAt',
+                      timezone,
+                    },
+                  },
+                  updatedAt: {
+                    $dateToString: {
+                      format: '%Y-%m-%d %H:%M:%S',
+                      date: '$updatedAt',
+                      timezone,
+                    },
+                  },
+                },
+              },
+              {
+                $skip: (Number(page) - 1) * Number(pageSize),
+              },
+              {
+                $limit: Number(pageSize),
+              },
+            ],
           },
         },
       ]);
 
-      return result;
+      return {
+        list: result[0].list,
+        total: result[0].total[0].total,
+      };
     } catch (error) {
       console.error(error);
-      return null;
+      return { list: [], total: 0 };
     }
   }
 }

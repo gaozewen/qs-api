@@ -31,18 +31,19 @@ class QuestionnaireController extends Controller {
     const { ctx } = this;
     const { page, pageSize, keyword, isStar, isDeleted } = ctx.request.query;
 
-    const list = await ctx.service.questionnaire.getQuestionnaireList({
+    const { list, total } = await ctx.service.questionnaire.getQuestionnaireList({
       page,
       pageSize,
       keyword,
       isStar,
       isDeleted,
     });
+
     ctx.body = {
       errno: ERROR_SUCCESS,
       data: {
         list,
-        total: 0, // 总条数
+        total, // 总条数
       },
     };
   }
