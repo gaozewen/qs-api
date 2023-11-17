@@ -4,4 +4,5 @@ module.exports = {
   ERROR_DB: 2, // 数据库错误
   ERROR_JWT_EXPIRED: 3, // token 过期
   ERROR_JWT_UNSET: 4, // token 未设置
+  ERROR_PARAMS: 5, // 参数错误
 };

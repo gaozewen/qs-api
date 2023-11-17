@@ -27,4 +27,6 @@ module.exports = app => {
   router.patch('/api/questionnaire/:id', jwt, controller.questionnaire.patch);
   // 复制问卷
   router.post('/api/questionnaire/duplicate/:id', jwt, controller.questionnaire.duplicate);
+  // 批量彻底删除问卷
+  router.delete('/api/questionnaire', jwt, controller.questionnaire.delete);
 };

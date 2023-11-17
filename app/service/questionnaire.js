@@ -165,5 +165,17 @@ class QuestionnaireService extends Service {
       return null;
     }
   }
+
+  // 批量彻底删除问卷
+  async deleteQuestionnaireByIds(ids) {
+    const { ctx } = this;
+    try {
+      const result = await ctx.model.Questionnaire.deleteMany({ _id: { $in: ids } });
+      return result;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
 }
 module.exports = QuestionnaireService;

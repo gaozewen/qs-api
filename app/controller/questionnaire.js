@@ -1,7 +1,7 @@
 'use strict';
 
 const { Controller } = require('egg');
-const { ERROR_SUCCESS, ERROR_FORM, ERROR_DB } = require('../constant/errno');
+const { ERROR_SUCCESS, ERROR_FORM, ERROR_DB, ERROR_PARAMS } = require('../constant/errno');
 
 class QuestionnaireController extends Controller {
   // 新建问卷
@@ -98,6 +98,33 @@ class QuestionnaireController extends Controller {
       ctx.body = {
         errno: ERROR_DB,
         msg: '更新问卷数据失败',
+        data: {},
+      };
+      return;
+    }
+    ctx.body = {
+      errno: ERROR_SUCCESS,
+      data: result,
+    };
+  }
+
+  // 批量彻底删除问卷
+  async delete() {
+    const { ctx } = this;
+    const { ids } = ctx.request.body;
+    if (!ids || ids.length === 0) {
+      ctx.body = {
+        errno: ERROR_PARAMS,
+        msg: 'ids 参数异常',
+        data: {},
+      };
+      return;
+    }
+    const result = await ctx.service.questionnaire.deleteQuestionnaireByIds(ids);
+    if (!result) {
+      ctx.body = {
+        errno: ERROR_DB,
+        msg: '彻底删除问卷失败',
         data: {},
       };
       return;
