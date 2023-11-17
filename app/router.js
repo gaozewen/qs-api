@@ -16,4 +16,9 @@ module.exports = app => {
   router.post('/api/user/login', controller.user.login);
   // 获取用户信息
   router.get('/api/user/info', jwt, controller.user.getUserInfo);
+
+  // 新建问卷
+  router.post('/api/questionnaire', jwt, controller.questionnaire.create);
+  // 获取（查询）问卷列表
+  router.get('/api/questionnaire', jwt, controller.questionnaire.list);
 };

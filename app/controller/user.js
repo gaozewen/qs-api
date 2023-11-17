@@ -53,7 +53,10 @@ class UserController extends Controller {
     ctx.body = {
       errno: ERROR_SUCCESS,
       msg: '注册成功',
-      data: null,
+      data: {
+        username,
+        password,
+      },
     };
   }
 
@@ -110,10 +113,9 @@ class UserController extends Controller {
 
   // 获取用户信息
   async getUserInfo() {
-    const { ctx, app } = this;
-    const token = ctx.request.header.token; // 获取header 的token
-    const decode = app.jwt.verify(token, app.config.jwt.secret);
-    const { username, nickname } = decode;
+    const { ctx } = this;
+    const userInfo = ctx.helper.getUserInfoByToken();
+    const { username, nickname } = userInfo;
     ctx.body = {
       errno: ERROR_SUCCESS,
       msg: '成功',
