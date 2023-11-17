@@ -23,4 +23,6 @@ module.exports = app => {
   router.get('/api/questionnaire', jwt, controller.questionnaire.list);
   // 获取单个问卷信息
   router.get('/api/questionnaire/:id', jwt, controller.questionnaire.item);
+  // 更新问卷
+  router.patch('/api/questionnaire/:id', jwt, controller.questionnaire.patch);
 };

@@ -67,6 +67,26 @@ class QuestionnaireController extends Controller {
       data: result,
     };
   }
+
+  // 更新问卷
+  async patch() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+
+    const result = await ctx.service.questionnaire.updateQuestionnaireById(id);
+    if (!result) {
+      ctx.body = {
+        errno: ERROR_DB,
+        msg: '更新问卷数据失败',
+        data: {},
+      };
+      return;
+    }
+    ctx.body = {
+      errno: ERROR_SUCCESS,
+      data: result,
+    };
+  }
 }
 
 module.exports = QuestionnaireController;

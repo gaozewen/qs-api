@@ -42,9 +42,15 @@ class QuestionnaireService extends Service {
   async getQuestionnaireList({ page, pageSize, keyword, isStar, isDeleted }) {
     const { ctx } = this;
     const { timezone } = ctx;
-    const $and = [{ title: { $regex: keyword || '' } }];
+    const $and = [
+      { title: { $regex: keyword || '' } },
+      // 回收站列表 isDeleted ? true : false
+      { isDeleted: { $eq: !!isDeleted } },
+    ];
+
+    // 星标问卷列表
     if (isStar) $and.push({ isStar: { $eq: Boolean(isStar) } });
-    if (isDeleted) $and.push({ isDeleted: { $eq: Boolean(isDeleted) } });
+
     const $match = { $and };
 
     try {
@@ -102,7 +108,7 @@ class QuestionnaireService extends Service {
 
       return {
         list: result[0].list,
-        total: result[0].total[0].total,
+        total: (result[0].total[0] || {}).total || 0,
       };
     } catch (error) {
       console.error(error);
@@ -115,6 +121,21 @@ class QuestionnaireService extends Service {
     const { ctx } = this;
     try {
       const result = await ctx.model.Questionnaire.findById(id);
+      return result;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  // 更新问卷
+  async updateQuestionnaireById(id) {
+    const { ctx } = this;
+    try {
+      const result = await ctx.model.Questionnaire.updateOne(
+        { _id: id },
+        ctx.request.body
+      );
       return result;
     } catch (error) {
       console.error(error);
