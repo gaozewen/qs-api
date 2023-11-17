@@ -10,6 +10,8 @@ see [egg docs][egg] for more detail.
 
 ### Development
 
+**需要首先启动 mongodb service 再运行项目**
+
 ```bash
 $ npm i
 $ npm run dev

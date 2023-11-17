@@ -1,5 +1,4 @@
 const { Service } = require('egg');
-const crypto = require('crypto');
 
 class UserService extends Service {
   // 通过 username 获取用户信息
@@ -15,6 +14,7 @@ class UserService extends Service {
             _id: { $toString: '$_id' },
             username: 1,
             nickname: 1,
+            password: 1,
             createdAt: {
               $dateToString: {
                 format: '%Y-%m-%d %H:%M:%S',
@@ -57,18 +57,11 @@ class UserService extends Service {
     const { ctx } = this;
     const { username, password, nickname } = body;
 
-    // HMAC 加密算法
-    const hmac = (key, str) => {
-      const hmac = crypto.createHmac('sha256', key);
-      hmac.update(str);
-      return hmac.digest('hex');
-    };
-
     try {
       const result = await ctx.model.User.create({
         username,
         // 给密码加密
-        password: hmac('gzw-qs-api', password),
+        password: ctx.helper.hmac(password),
         nickname,
       });
 

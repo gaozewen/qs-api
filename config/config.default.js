@@ -38,6 +38,10 @@ module.exports = appInfo => {
     },
   };
 
+  config.jwt = {
+    secret: 'gzw-qs-api-jwt',
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

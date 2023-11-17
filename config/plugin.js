@@ -10,4 +10,8 @@ module.exports = {
     enable: true,
     package: 'egg-mongoose',
   },
+  jwt: {
+    enable: true,
+    package: 'egg-jwt',
+  },
 };
