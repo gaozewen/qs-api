@@ -1,7 +1,12 @@
 'use strict';
 
 const { Controller } = require('egg');
-const { ERROR_SUCCESS, ERROR_FORM, ERROR_DB, ERROR_PARAMS } = require('../constant/errno');
+const {
+  ERROR_SUCCESS,
+  ERROR_FORM,
+  ERROR_DB,
+  ERROR_PARAMS,
+} = require('../constant/errno');
 
 class QuestionnaireController extends Controller {
   // 新建问卷
@@ -30,14 +35,17 @@ class QuestionnaireController extends Controller {
   async list() {
     const { ctx } = this;
     const { page, pageSize, keyword, isStar, isDeleted } = ctx.request.query;
-
-    const { list, total } = await ctx.service.questionnaire.getQuestionnaireList({
-      page,
-      pageSize,
-      keyword,
-      isStar,
-      isDeleted,
-    });
+    const userInfo = ctx.helper.getUserInfoByToken();
+    const { _id: userId } = userInfo;
+    const { list, total } =
+      await ctx.service.questionnaire.getQuestionnaireList({
+        userId,
+        page,
+        pageSize,
+        keyword,
+        isStar,
+        isDeleted,
+      });
 
     ctx.body = {
       errno: ERROR_SUCCESS,
@@ -93,7 +101,9 @@ class QuestionnaireController extends Controller {
     const { ctx } = this;
     const { id } = ctx.params;
 
-    const result = await ctx.service.questionnaire.duplicateQuestionnaireById(id);
+    const result = await ctx.service.questionnaire.duplicateQuestionnaireById(
+      id
+    );
     if (!result) {
       ctx.body = {
         errno: ERROR_DB,
@@ -120,7 +130,9 @@ class QuestionnaireController extends Controller {
       };
       return;
     }
-    const result = await ctx.service.questionnaire.deleteQuestionnaireByIds(ids);
+    const result = await ctx.service.questionnaire.deleteQuestionnaireByIds(
+      ids
+    );
     if (!result) {
       ctx.body = {
         errno: ERROR_DB,

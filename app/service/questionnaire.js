@@ -39,10 +39,18 @@ class QuestionnaireService extends Service {
     }
   }
   // 获取问卷列表
-  async getQuestionnaireList({ page, pageSize, keyword, isStar, isDeleted }) {
+  async getQuestionnaireList({
+    userId,
+    page,
+    pageSize,
+    keyword,
+    isStar,
+    isDeleted,
+  }) {
     const { ctx } = this;
     const { timezone } = ctx;
     const $and = [
+      { userId: { $eq: userId } },
       { title: { $regex: keyword || '' } },
       // 回收站列表 isDeleted ? true : false
       { isDeleted: { $eq: !!isDeleted } },
@@ -170,7 +178,9 @@ class QuestionnaireService extends Service {
   async deleteQuestionnaireByIds(ids) {
     const { ctx } = this;
     try {
-      const result = await ctx.model.Questionnaire.deleteMany({ _id: { $in: ids } });
+      const result = await ctx.model.Questionnaire.deleteMany({
+        _id: { $in: ids },
+      });
       return result;
     } catch (error) {
       console.error(error);

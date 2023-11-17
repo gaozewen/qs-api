@@ -21,8 +21,8 @@ module.exports = app => {
   router.post('/api/questionnaire', jwt, controller.questionnaire.create);
   // 获取（查询）问卷列表
   router.get('/api/questionnaire', jwt, controller.questionnaire.list);
-  // 获取单个问卷信息
-  router.get('/api/questionnaire/:id', jwt, controller.questionnaire.item);
+  // 获取单个问卷信息 【不需要 JWT，因为在客户端答卷页需要使用】
+  router.get('/api/questionnaire/:id', controller.questionnaire.item);
   // 更新问卷
   router.patch('/api/questionnaire/:id', jwt, controller.questionnaire.patch);
   // 复制问卷
