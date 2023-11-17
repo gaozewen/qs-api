@@ -25,4 +25,6 @@ module.exports = app => {
   router.get('/api/questionnaire/:id', jwt, controller.questionnaire.item);
   // 更新问卷
   router.patch('/api/questionnaire/:id', jwt, controller.questionnaire.patch);
+  // 复制问卷
+  router.post('/api/questionnaire/duplicate/:id', jwt, controller.questionnaire.duplicate);
 };

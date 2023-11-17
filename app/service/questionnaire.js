@@ -67,6 +67,8 @@ class QuestionnaireService extends Service {
               {
                 $match,
               },
+              // 按创建时间倒序
+              { $sort: { createdAt: -1 } },
               {
                 $project: {
                   _id: { $toString: '$_id' },
@@ -136,6 +138,27 @@ class QuestionnaireService extends Service {
         { _id: id },
         ctx.request.body
       );
+      return result;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  // 复制问卷
+  async duplicateQuestionnaireById(id) {
+    const { ctx } = this;
+    try {
+      // 使用 lean 返回的是一个 javascript 对象
+      const originalData = await ctx.model.Questionnaire.findById(id).lean();
+
+      const willCreateData = { ...originalData };
+      delete willCreateData._id;
+      delete willCreateData.createdAt;
+      delete willCreateData.updatedAt;
+      willCreateData.isPublished = false;
+
+      const result = await ctx.model.Questionnaire.create(willCreateData);
       return result;
     } catch (error) {
       console.error(error);
