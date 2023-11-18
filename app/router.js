@@ -29,4 +29,7 @@ module.exports = app => {
   router.post('/api/questionnaire/duplicate/:id', jwt, controller.questionnaire.duplicate);
   // 批量彻底删除问卷
   router.delete('/api/questionnaire', jwt, controller.questionnaire.delete);
+
+  // 新建答卷
+  router.post('/api/answer', controller.answer.create);
 };
