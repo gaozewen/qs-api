@@ -26,10 +26,17 @@ module.exports = app => {
   // 更新问卷
   router.patch('/api/questionnaire/:id', jwt, controller.questionnaire.patch);
   // 复制问卷
-  router.post('/api/questionnaire/duplicate/:id', jwt, controller.questionnaire.duplicate);
+  router.post(
+    '/api/questionnaire/duplicate/:id',
+    jwt,
+    controller.questionnaire.duplicate
+  );
   // 批量彻底删除问卷
   router.delete('/api/questionnaire', jwt, controller.questionnaire.delete);
 
   // 新建答卷
   router.post('/api/answer', controller.answer.create);
+
+  // 答卷统计列表
+  router.get('/api/statistic/:questionnaireId', jwt, controller.statistic.list);
 };
