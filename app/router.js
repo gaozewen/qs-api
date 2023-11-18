@@ -39,4 +39,10 @@ module.exports = app => {
 
   // 答卷统计列表
   router.get('/api/statistic/:questionnaireId', jwt, controller.statistic.list);
+  // 获取单个组件的统计数据汇总(Radio,Checkbox)
+  router.get(
+    '/api/statistic/:questionnaireId/:componentId',
+    jwt,
+    controller.statistic.singleComponentStatistic
+  );
 };

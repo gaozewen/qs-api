@@ -130,7 +130,7 @@ class QuestionnaireService extends Service {
   async getQuestionnaireById(id) {
     const { ctx } = this;
     try {
-      const result = await ctx.model.Questionnaire.findById(id);
+      const result = await ctx.model.Questionnaire.findById(id).lean();
       return result;
     } catch (error) {
       console.error(error);
