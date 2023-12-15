@@ -69,5 +69,5 @@ jobs:
                        --restart unless-stopped \
                        --name ${{ env.PROJECT_NAME }} \
                        -v /root/config/${{ env.PROJECT_NAME }}:/etc/${{ env.PROJECT_NAME }} \
-                       -p 7001:7001 \
+                       --network host \
                        ${{ env.PROJECT_NAME }}:${{ github.sha }}
