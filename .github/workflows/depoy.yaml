@@ -68,5 +68,6 @@ jobs:
             docker run -d \
                        --restart unless-stopped \
                        --name ${{ env.PROJECT_NAME }} \
-                       --network host \
+                       -v /root/config/${{ env.PROJECT_NAME }}:/etc/${{ env.PROJECT_NAME }} \
+                       -p 7001:7001 \
                        ${{ env.PROJECT_NAME }}:${{ github.sha }}

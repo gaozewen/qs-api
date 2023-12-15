@@ -2,6 +2,10 @@
 
 'use strict';
 
+const { config } = require('dotenv');
+const { IS_DEV } = require('../app/constant');
+
+config({ path: IS_DEV ? '.env' : '/etc/qs-api/.env' });
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -20,8 +24,10 @@ module.exports = appInfo => {
 
   config.mongoose = {
     client: {
-      url: 'mongodb://127.0.0.1/qs-sys',
-      options: {},
+      url: process.env.MONGO_URI,
+      options: {
+        dbName: process.env.DB_NAME,
+      },
     },
   };
 
